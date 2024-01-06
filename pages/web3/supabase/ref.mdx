@@ -1,0 +1,151 @@
+# Supabase Reference App
+
+In this guide, we will create a straightforward reference app that leverages the core functionalities of Supabase. This app does not include any extra bundles, making it an ideal reference point for future projects.
+
+## Setup
+
+### Create a Supabase Project
+
+If you haven't already, create a Supabase project. In the 'Project Settings' section, navigate to 'API' to find your project URL and API Keys. Copy the URL and the key labeled as 'anon' for the next steps.
+
+### Create a Codesandbox Project
+
+Visit [codesandbox.io](http://codesandbox.io) and create a new "SANDBOX" (not DEVBOX) project, selecting "React" as your template.
+
+### Install the Supabase Library
+
+In the 'dependencies' section at the bottom left corner, search for `@supabase/supabase-js` and ensure the version is `2.X.X`. If the version is different, lower it to `2`.
+
+## Connect Your App to Your Supabase Project
+
+Supabase hosts numerous projects, so it's essential to configure your app to connect to your specific Supabase project. Follow these steps to add your own API key:
+
+```js filename="App.js" {2,4-7}
+import "./styles.css";
+import { createClient } from "@supabase/supabase-js";
+
+const projectUrl = "https://YOUR_PROJECT_ID.supabase.co";
+const key = "YOUR_API_KEY";
+const supabase = createClient(projectUrl, key);
+console.log(supabase);
+
+export default function App() {
+  return (
+    <div className="App">
+      <h1>Hello CodeSandbox</h1>
+      <h2>Start editing to see some magic happen!</h2>
+    </div>
+  );
+}
+```
+
+The `supabase` variable allows you to communicate with the server. The `console.log(supabase)` line will display an object. Check for any errors and feel free to remove that line once you've verified your connection.
+
+## Authentication
+
+Authentication and Authorization differs as follows
+
+- Authentication: Checking if the user is who claims to be
+- Authorization: Checking if the user has a privilege to do something
+
+In this section, we will only go over authentication and revisit authorization in another topic. We start off by adding three buttons to our app and a state to track the user session
+
+```jsx filename="App.js" {2,4-6,10-12}
+export default function App() {
+  const [session, setSession] = useState(null);
+
+  async function signup() {}
+  async function signIn() {}
+  async function signOut() {}
+
+  return (
+    <div className="App">
+      <button onClick={signup}>Sign Up</button>
+      <button onClick={signIn}>Sign In</button>
+      <button onClick={signOut}>Sign Out</button>
+    </div>
+  );
+}
+```
+
+### Sign Up
+
+```jsx
+async function signUp() {
+  const { data, error } = await supabase.auth.signUp({
+    email: "YOUR-EMAIL",
+    password: "RANDOM-PASSWORD",
+    options: {
+      emailRedirectTo: "YOUR-DOMAIN",
+    },
+  });
+  console.log(data);
+}
+```
+
+Upon running this function, go to Supabase's authentication section and the 'User' menu, and you will see the signed up email there with status "Waiting for verification". Go to your inbox, and click on the link inside the verification email and observe the change. Later, you will learn the following additional topics
+
+- [ ] Adding a form
+- [ ] Adding an error message display (e.g. invalid email addres, existing email address, and etc)
+- [ ] Adding 3rd party authentication (e.g. gmail, github)
+
+But for now, we are only building a reference app for your future reference so let's move on.
+
+### Sign In
+
+```jsx
+async function signIn() {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: "YOUR EMAIL",
+    password: "RANDOM-PASSWORD",
+  });
+  console.log("login result", data, error);
+}
+```
+
+> Notice we are not changing the state variable `user` here. We will do that somewhere else. For now, observe the object returned when the password correct and incorrect.
+
+### Sign Out
+
+```jsx
+async function signOut() {
+  const { error } = await supabase.auth.signOut();
+}
+```
+
+### Auth Change Listener
+
+Add the `useEffect()` to the top of the App component. Supabase will automatically detect the changes in Auth states and run the callback functions.
+
+```js filename="App.js" {4-16}
+export default function App() {
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function SignIn() { .... }
+```
+
+In practice, an app exposes many different ways to sign in and out. For example, user session can change when
+
+- The user clicks on a log out button (which might exist on multiple pages)
+- The user signs in
+- The user signs in or out on another tab
+- The user signs out due to timing out
+- among many others
+
+It will be much easier to create a single point which reacts to an authentication state changes. For example, we might want to perform extra set of instructions when a user logs in (for example, giving points once per day)
+
+The code provided simply stores the entire session into a state variable which contains many useful information such as the user_id and his/her email
