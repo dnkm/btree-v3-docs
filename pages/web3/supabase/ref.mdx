@@ -43,12 +43,7 @@ The `supabase` variable allows you to communicate with the server. The `console.
 
 ## Authentication
 
-Authentication and Authorization differs as follows
-
-- Authentication: Checking if the user is who claims to be
-- Authorization: Checking if the user has a privilege to do something
-
-In this section, we will only go over authentication and revisit authorization in another topic. We start off by adding three buttons to our app and a state to track the user session
+Add the following boilerplate code to the App component. This will add 'Sign Up', 'Sign In' and 'Sign Out' buttons and the functions they will call. As a result of each action, user's session (authentication state) will change so we create a state variable `session` to keep track of that.
 
 ```jsx filename="App.js" {2,4-6,10-12}
 export default function App() {
@@ -148,4 +143,5 @@ In practice, an app exposes many different ways to sign in and out. For example,
 
 It will be much easier to create a single point which reacts to an authentication state changes. For example, we might want to perform extra set of instructions when a user logs in (for example, giving points once per day)
 
-The code provided simply stores the entire session into a state variable which contains many useful information such as the user_id and his/her email
+The code provided simply stores the entire session into a state variable which contains many useful information such as the user_id and his/her email.
+
