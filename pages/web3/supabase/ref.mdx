@@ -43,19 +43,17 @@ The `supabase` variable allows you to communicate with the server. The `console.
 
 ## Authentication
 
-Add the following boilerplate code to the App component. This will add 'Sign Up', 'Sign In' and 'Sign Out' buttons and the functions they will call. As a result of each action, user's session (authentication state) will change so we create a state variable `session` to keep track of that.
-
 ```jsx filename="App.js" {2,4-6,10-12}
 export default function App() {
   const [session, setSession] = useState(null);
 
-  async function signup() {}
+  async function signUp() {}
   async function signIn() {}
   async function signOut() {}
 
   return (
     <div className="App">
-      <button onClick={signup}>Sign Up</button>
+      <button onClick={signUp}>Sign Up</button>
       <button onClick={signIn}>Sign In</button>
       <button onClick={signOut}>Sign Out</button>
     </div>
@@ -63,12 +61,14 @@ export default function App() {
 }
 ```
 
+Add the adobe boilerplate code to the `App()` component. This will add 'Sign Up', 'Sign In' and 'Sign Out' buttons along with the functions they will call. Once implemented, each action will eventually change the user's session (authentication state) so we create a state variable `session` to keep track of that. Let's add these functions one at a time.
+
 ### Sign Up
 
 ```jsx
 async function signUp() {
   const { data, error } = await supabase.auth.signUp({
-    email: "YOUR-EMAIL",
+    email: "YOUR-EMAIL",  /* use your real email address for verification */
     password: "RANDOM-PASSWORD",
     options: {
       emailRedirectTo: "YOUR-DOMAIN",
@@ -78,13 +78,13 @@ async function signUp() {
 }
 ```
 
-Upon running this function, go to Supabase's authentication section and the 'User' menu, and you will see the signed up email there with status "Waiting for verification". Go to your inbox, and click on the link inside the verification email and observe the change. Later, you will learn the following additional topics
+Upon running this function, go to Supabase's authentication section and the 'User' menu, and you will see a new user with the email address you entered with status "Waiting for verification". Go to your inbox, and click on the link inside the verification email and observe the change. Later in the course, you will learn the following additional topics
 
-- [ ] Adding a form
-- [ ] Adding an error message display (e.g. invalid email addres, existing email address, and etc)
-- [ ] Adding 3rd party authentication (e.g. gmail, github)
+- Adding a form
+- Adding an error message display (e.g. invalid email addres, existing email address, and etc)
+- Adding 3rd party authentication (e.g. gmail, github)
 
-But for now, we are only building a reference app for your future reference so let's move on.
+For now, we are only building a reference app for your future reference so let's move on.
 
 ### Sign In
 
@@ -145,3 +145,24 @@ It will be much easier to create a single point which reacts to an authenticatio
 
 The code provided simply stores the entire session into a state variable which contains many useful information such as the user_id and his/her email.
 
+### Printing Session for debuggin
+
+```jsx filename="App.js
+export default function App() {
+
+  ...
+
+  return (
+    <div className="App">
+      <pre>{session ? session.user.id : ""}</pre>
+      <button onClick={signUpNewUser}>Sign up</button>
+      <hr />
+      <button onClick={signInWithEmail}>Sign in</button>
+      <button onClick={signOut}>Sign out</button>
+      <hr />
+      {session && <UserArea />}
+    </div>
+  );
+}
+
+```
