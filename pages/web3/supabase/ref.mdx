@@ -1,24 +1,24 @@
-# Supabase Reference App
+# Super Simple Supabase App
 
-In this guide, we will create a straightforward reference app that leverages the core functionalities of Supabase. This app does not include any extra bundles, making it an ideal reference point for future projects.
+In this guide, we'll create an easy-peasy reference app that uses the core powers of Supabase. This app is as basic as it gets, making it your go-to reference for future projects.
 
-## Setup
+## Getting Started
 
-### Create a Supabase Project
+### Step 1: Set Up Supabase
 
-If you haven't already, create a Supabase project. In the 'Project Settings' section, navigate to 'API' to find your project URL and API Keys. Copy the URL and the key labeled as 'anon' for the next steps.
+If you haven't already, make a Supabase project. In the 'Project Settings' section, find your project URL and API Keys under 'API.' Copy the URL and the key labeled 'anon' for the next steps.
 
-### Create a Codesandbox Project
+### Step 2: Create a Codesandbox Project
 
-Visit [codesandbox.io](http://codesandbox.io) and create a new "SANDBOX" (not DEVBOX) project, selecting "React" as your template.
+Head over to [codesandbox.io](http://codesandbox.io) and create a new "SANDBOX" project, and choose "React" as your template.
 
-### Install the Supabase Library
+### Step 3: Install the Supabase Library
 
-In the 'dependencies' section at the bottom left corner, search for `@supabase/supabase-js` and ensure the version is `2.X.X`. If the version is different, lower it to `2`.
+In the 'dependencies' section at the bottom left, type in `@supabase/supabase-js`. Ensure it's version `2.X.X`. If it's different, lower it to `2`.
 
 ## Connect Your App to Your Supabase Project
 
-Supabase hosts numerous projects, so it's essential to configure your app to connect to your specific Supabase project. Follow these steps to add your own API key:
+Supabase hosts lots of projects, so let's connect your app to your specific Supabase project. Follow these steps to add your own API key:
 
 ```js filename="App.js" {2,4-7}
 import "./styles.css";
@@ -39,7 +39,7 @@ export default function App() {
 }
 ```
 
-The `supabase` variable allows you to communicate with the server. The `console.log(supabase)` line will display an object. Check for any errors and feel free to remove that line once you've verified your connection.
+The `supabase` variable lets you communicate with the server. The `console.log(supabase)` line shows an object. Check for any bugs and feel free to remove that line once you're sure you're connected.
 
 ## Authentication
 
@@ -61,14 +61,14 @@ export default function App() {
 }
 ```
 
-Add the adobe boilerplate code to the `App()` component. This will add 'Sign Up', 'Sign In' and 'Sign Out' buttons along with the functions they will call. Once implemented, each action will eventually change the user's session (authentication state) so we create a state variable `session` to keep track of that. Let's add these functions one at a time.
+We've got some starter code in the `App()` component for you. It adds 'Sign Up,' 'Sign In,' and 'Sign Out' buttons with the functions they'll trigger. To track the user's session (authentication state), we've got a state variable called `session`. Let's tackle these functions one by one.
 
 ### Sign Up
 
 ```jsx
 async function signUp() {
   const { data, error } = await supabase.auth.signUp({
-    email: "YOUR-EMAIL",  /* use your real email address for verification */
+    email: "YOUR-EMAIL" /* use your real email for verification */,
     password: "RANDOM-PASSWORD",
     options: {
       emailRedirectTo: "YOUR-DOMAIN",
@@ -78,13 +78,9 @@ async function signUp() {
 }
 ```
 
-Upon running this function, go to Supabase's authentication section and the 'User' menu, and you will see a new user with the email address you entered with status "Waiting for verification". Go to your inbox, and click on the link inside the verification email and observe the change. Later in the course, you will learn the following additional topics
+When you run this function, you'll see a new user in Supabase's authentication section with the email you entered, and it'll say "Waiting for verification." Check your inbox, click the verification email link, and see the changes. We'll cover more topics later, like adding a form, displaying error messages, 3rd party authentication, and creating a landing page for email verification.
 
-- Adding a form
-- Adding an error message display (e.g. invalid email addres, existing email address, and etc)
-- Adding 3rd party authentication (e.g. gmail, github)
-
-For now, we are only building a reference app for your future reference so let's move on.
+But for now, let's keep it simple for future reference.
 
 ### Sign In
 
@@ -98,7 +94,7 @@ async function signIn() {
 }
 ```
 
-> Notice we are not changing the state variable `user` here. We will do that somewhere else. For now, observe the object returned when the password correct and incorrect.
+Notice we're not updating the `session` state here. We'll handle that elsewhere. Right now, just check the object returned for successful and unsuccessful login attempts.
 
 ### Sign Out
 
@@ -110,7 +106,7 @@ async function signOut() {
 
 ### Auth Change Listener
 
-Add the `useEffect()` to the top of the App component. Supabase will automatically detect the changes in Auth states and run the callback functions.
+Add the `useEffect()` at the top of the App component. Supabase automatically senses changes in authentication states and runs the callback functions.
 
 ```js filename="App.js" {4-16}
 export default function App() {
@@ -133,36 +129,236 @@ export default function App() {
   async function SignIn() { .... }
 ```
 
-In practice, an app exposes many different ways to sign in and out. For example, user session can change when
+In practice, apps offer various ways to sign in and out, like clicking a logout button, signing in, signing in or out on another tab, or timing out. It's easier to have a single point that reacts to authentication state changes. For example, you might want to do extra stuff when a user logs in, like giving daily points.
 
-- The user clicks on a log out button (which might exist on multiple pages)
-- The user signs in
-- The user signs in or out on another tab
-- The user signs out due to timing out
-- among many others
+This code simply stores the whole session in a state variable, which includes useful info like user_id and email.
 
-It will be much easier to create a single point which reacts to an authentication state changes. For example, we might want to perform extra set of instructions when a user logs in (for example, giving points once per day)
+### Printing Session for Debugging
 
-The code provided simply stores the entire session into a state variable which contains many useful information such as the user_id and his/her email.
-
-### Printing Session for debuggin
-
-```jsx filename="App.js
+```jsx filename="App.js {7}
 export default function App() {
 
   ...
 
   return (
     <div className="App">
-      <pre>{session ? session.user.id : ""}</pre>
-      <button onClick={signUpNewUser}>Sign up</button>
+      <pre style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(session)}</pre>
+      <button onClick={signUp}>Sign Up</button>
+      <button onClick={signIn}>Sign In</button>
+      <button onClick={signOut}>Sign Out</button>
+    </div>
+  );
+}
+```
+
+Since `session` is an object, you can't print it directly. `JSON.stringify()` turns any object into a readable string in standard JSON format. The `whiteSpace` style wraps the content so you don't have to scroll horizontally.
+
+### User-Only Components
+
+```jsx filename="App.js" {9-10,15-17}
+export default function App() {
+  ...
+  return (
+    <div className="App">
+      <pre style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(session)}</pre>
+      <button onClick={signUp}>Sign Up</button>
+      <button onClick={signIn}>Sign In</button>
+      <button onClick={signOut}>Sign Out</button>
       <hr />
-      <button onClick={signInWithEmail}>Sign in</button>
-      <button onClick={signOut}>Sign out</button>
-      <hr />
-      {session && <UserArea />}
+      {session && <UserZone />}
     </div>
   );
 }
 
+function UserZone() {
+  return <div>Only logged-in users can see this</div>;
+}
 ```
+
+Here we create a section that only logged in users can see. Sign in and out a few times and see the user-zone component toggle.
+
+## Database Basics
+
+Supabase gives us a simple CRUD (Create-Read-Update-Delete) API automatically. For more complex stuff, you might need your own server-side code. But for basics, the built-in SDK does the job.
+
+### Create a Table
+
+Creating a database table usually happens outside your app's scope. Go to your Supabase project and use this SQL to create the "item" table (if you didn't already in previous SQL exercises):
+
+```sql
+create table
+  public.item (
+    item_id bigserial,
+    name character varying(100) not null,
+    created_at timestamp with time zone null default current_timestamp,
+    stars integer null,
+    is_complete boolean null default false,
+    constraint item_pkey primary key (item_id),
+    constraint item_name_key unique (name),
+    constraint item_stars_check check (
+      (
+        (stars >= 0)
+        and (stars <= 3)
+      )
+    )
+  ) tablespace pg_default;
+```
+
+### Read Rows
+
+Replace the `UserZone()` function with this code:
+
+```jsx filename="App.js" {5}
+function UserZone() {
+  let [items, setItems] = useState([]);
+
+  async function read() {
+    let { data: items, error } = await supabase.from("item").select("*");
+    setItems(items);
+  }
+
+  return (
+    <div>
+      <div>
+        <button onClick={read}>Load items</button>
+      </div>
+      <hr />
+      <h1>Items</h1>
+      <div>
+        {items.map((v) => (
+          <div key={v.item_id}>
+            {v.name} ({v.stars})
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+```jsx
+let { data: items, error } = await supabase.from("item").select("*");
+```
+
+This line is key. `supabase.from("item").select("*")` turns into an SQL `SELECT * FROM item` and returns an object with data or an error. We renamed 'data' to 'items' for clarity.
+
+When you click "Load items," it populates the items array, and the names show on the screen. If you don't have any items in the database, use Supabase's GUI tool to create some. If not, just wait until we cover "Insert Rows" below.
+
+### Insert Rows
+
+```jsx {6-14, 20}
+function UserZone() {
+  let [items, setItems] = useState([]);
+
+  async function read() {...}
+
+  async function insert() {
+    const randomEntry = {
+      name: "test item " + new Date().getTime(),
+      stars: Math.floor(Math.random() * 4),
+    };
+
+    const { data, error } = await supabase.from("item").insert(randomEntry).select();
+    setItems([...items, ...data]);
+  }
+
+  return (
+    <div>
+      <div>
+        <button onClick={read}>Load items</button>
+        <button onClick={insert}>Insert random item</button>
+      </div>
+      ...
+  );
+}
+```
+
+```jsx
+const randomEntry = {
+  name: "test item " + new Date().getTime(),
+  stars: Math.floor(Math.random() * 4),
+};
+```
+
+Here, we're inserting a generated object with 'name' and 'stars' fields. We add the timestamp to 'name' to avoid duplicates. 
+
+```jsx
+const { data, error } = await supabase
+  .from("item")
+  .insert(randomEntry)
+  .select();
+setItems([...items, ...data]);
+```
+
+The first statement inserts an object into the database, then returns the _inserted object_ as 'data'. Since data is an array (which contains a single item), we merge it with the current 'items' array and set it as new items. If you don't need the item you inserted, you can skip `select()`.
+
+> Normally, you'd create new items via a form. We skipped that for simplicity.
+
+### Delete Rows
+
+```jsx {3-6,15}
+function UserZone() {
+  ...
+  async function remove(item_id) {
+    await supabase.from("item").delete().eq("item_id", item_id);
+    setItems(items.filter((v) => v.item_id !== item_id));
+  }
+
+  return (
+    <div>
+      ...
+      <div>
+        {items.map((v) => (
+          <div key={v.item_id}>
+            {v.name} ({v.stars})
+            <button onClick={() => remove(v.item_id)}>x</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+First, we create the `remove()` function, which takes an `item_id` as a parameter. Note that we can't name it 'delete()' since it's a reserved keyword in Javascript. After deletion, we remove the item from the state variable to take it off the screen.
+
+We also add a delete button to every item being rendered.
+
+### Update Row
+
+```jsx {3-10,20-22}
+function UserZone() {
+  ...
+  async function update(item_id, stars) {
+    const { data, error } = await supabase
+      .from("item")
+      .update({ stars })
+      .eq("item_id", item_id)
+      .select();
+    setItems(items.map((v) => (v.item_id === item_id ? { ...v, stars } : v)));
+  }
+
+  return (
+    <div>
+      ...
+      <div>
+        {items.map((v) => (
+          <div key={v.item_id}>
+            {v.name} ({v.stars})
+            <button onClick={() => remove(v.item_id)}>x</button>
+            <button onClick={() => update(v.item_id, (v.stars + 1) % 3)}>
+              update
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+The `update()` function updates an item's "stars" value with the new value passed in. After updating the database successfully, it updates the local item with the updated one.
+
+We also add an 'update' button that increments the 'stars' value by 1 before wrapping back to 0.
+
+Project Link : https://codesandbox.io/p/sandbox/supabase-auth-example-l9shkq

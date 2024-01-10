@@ -9,10 +9,10 @@ const config: DocsThemeConfig = {
   // chat: {
   //   link: 'https://discord.com',
   // },
-  // docsRepositoryBase: 'https://github.com/shuding/nextra-docs-template',
+  docsRepositoryBase: "https://github.com/dnkm/btree-v3-docs/tree/main",
   footer: {
-    text: 'BTREE EDUCATION',
+    text: "BTREE EDUCATION",
   },
-}
+};
 
 export default config
