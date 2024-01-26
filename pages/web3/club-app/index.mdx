@@ -1,0 +1,131 @@
+# Intro
+
+We are going to apply all the knowledge we've gained so far to develop a "school club app," in which:
+
+- Users will have three roles: staff, member, and guest.
+- Guests will have limited privileges until approved by a staff member.
+- Daily roll call functionality will be implemented.
+- Staff members will be able to post announcements.
+- Users can leave comments on announcements.
+- Users will have the option to "like" an announcement.
+- Users can upload their profile photos.
+
+Additionally, we will be exploring advanced techniques as we work towards building a complete and comprehensive app.
+
+## Schema
+
+Create a schema for this app and get it approved by the instructor.
+
+Schema does not have to be a full SQL but rather, something like the following will suffice:
+
+Profiles
+(It is purposely not named `users` to differentiate from `auth.users` that Supabase creates and maintains. This table is supposed to store *additional* information not handled by the default `users` table)
+- id PK
+- full_name
+- grade
+- type (staff or member)
+
+Clubs
+- club_id PK
+- name
+- intro_text
+- minimum_grade
+
+Memberships
+- club_id PK
+- user_id PK
+
+
+# Next.js
+
+As we embark on more extensive projects, the limitations of React become apparent. To address these shortcomings, we'll transition to utilizing a framework built on top of React — and the go-to choice is **Next.js**.
+
+Choosing Next.js over plain React provides us with several key advantages. The two most significant benefits include:
+
+1. **Server-Side Code:** With Next.js, we can incorporate server-side code, enhancing security by keeping sensitive code hidden from end-users.
+
+2. **Built-in Routing:** Next.js simplifies our workflow by offering built-in routing. This eliminates the need for an abundance of configuration and setup code, making our development process more streamlined.
+
+To get started with Next.js, head to [CodeSandbox](https://codesandbox.io) and select "Create a DevBox" (rather than a Sandbox). Opt for the Next.js template, and allow some time for the system to set up a new environment for you.
+
+## Basics
+
+A Next.js project comes pre-equipped with various files, but for now, we can focus primarily on the `app` folder.
+
+### app/globals.css
+
+This file contains CSS code that applies universally to your entire app, as the name suggests. (Additionally, you have the flexibility to create local CSS that specifically targets individual components. We will learn this later when we add more files.) 
+
+Modify the content as follows to give your app a reddish tint (though not entirely, considering existing CSS):
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-red-100;
+}
+```
+
+This example demonstrates the incorporation of Tailwind CSS classes within CSS files, a handy technique when creating custom classes with Tailwind.
+
+### app/page.tsx
+
+Notice the file extension is `tsx` instead of the usual `jsx`. This change signifies the integration of TypeScript, a superset of JavaScript, commonly adopted in modern JavaScript projects. While we'll delve deeper into TypeScript later, for now, rest assured that JavaScript still functions as expected.
+
+Modify the file with a simple content to initiate our project:
+
+```jsx
+export default function Home() {
+  return <main>hello world</main>;
+}
+```
+
+This sets the foundation for our Next.js project, allowing us to build upon it as we progress.
+
+# Next.js Routing
+
+First we want to add some pages. Create the following two files:
+
+```jsx
+// app/about/page.tsx
+export default function About() {
+  return (
+    <div>
+      <h1>About us</h1>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+    </div>
+  );
+}
+```
+
+```jsx
+// app/terms/page.tsx
+export default function Terms() {
+  return (
+    <div>
+      <h1>Terms</h1>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+      <h1>Privacy</h1>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+    </div>
+  );
+}
+```
+
+`app/about/page.tsx` will automatically be linked to "your-domain/about". Go ahead and append `/about` to the address in the preview window and see if it works. This naming scheme makes it easier to create other local files in the folder, thus making each file slimmer.
+
+## Decorate `h1` with css
+
+Notice our headers are just plain-sized text Add the following entry into `app/globals.css`. This is much more maintainable and consistent compared to adding classes to *all* h1 tags.
+
+```css
+h1 {
+  @apply text-3xl mt-2 mb-1;
+}
+```
+
+## Adding Navigation
+
+Open `app/layout.tsx`. This file is somewhat bloated so we will delete all but 
