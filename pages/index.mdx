@@ -1,44 +1,43 @@
-# Heading 1
+# Learn c++ as a second language
 
-Lorem ipsum **Blogger**, **Dropbox**, **Gist**, **GitHub**, **Google Drive**, **WordPress** and **Zendesk**. With [Handlebars templates](http://handlebarsjs.com/), you have full control over what you export.
+## Printing
+
+```cpp
+cout << "Hello World";
+```
+
+### new lines
+
+New lines need to be added separately
+
+```cpp
+cout << "Hello World\n";
+```
+
+## Something long
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	cin.tie(0)->sync_with_stdio(0);
+	cin >> s;
+  cout << s;
+}
+```
+
+## Some table
+
+| name  | description  |
+| ----- | ------------ |
+| btree | code academy |
 
 > Quote test **Publish** sub-menu.
-
-- Markdown: publish the Markdown text on a website that can interpret it (**GitHub** for instance),
-- HTML: publish the file converted to HTML via a Handlebars template (on a blog for example).
-
-> **Note:** The **Publish now** button is disabled if your file has not been published yet.
-
-# Code block
-
-```python
-print("this is a python code block")
-```
-
-```js
-console.log("this is a javascript code block");
-```
-
-## Tables
-
-|                |ASCII                          |HTML                         |
-|----------------|-------------------------------|-----------------------------|
-|Single backticks|`'Isn't this fun?'`            |'Isn't this fun?'            |
-|Quotes          |`"Isn't this fun?"`            |"Isn't this fun?"            |
-|Dashes          |`-- is en-dash, --- is em-dash`|-- is en-dash, --- is em-dash|
-
-## Tables 2
-
-| col | col |
-|---|---|
-| a | 100 |
-| b | 200 |
-
 
 ## KaTeX
 
 inline: $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$
-
 
 multiline:
 
@@ -46,26 +45,3 @@ $$
 \Gamma(z) = \int_0^\infty t^{z-1}e^{-t}dt\,.
 $$
 
-## UML diagrams (mermaid)
-
-```mermaid
-sequenceDiagram
-Alice ->> Bob: Hello Bob, how are you?
-Bob-->>John: How about you John?
-Bob--x Alice: I am good thanks!
-Bob-x John: I am good thanks!
-Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
-
-Bob-->Alice: Checking with John...
-Alice->John: Yes... John, how are you?
-```
-
-And this will produce a flow chart:
-
-```mermaid
-graph LR
-A[Square Rect] -- Link text --> B((Circle))
-A --> C(Round Rect)
-B --> D{Rhombus}
-C --> D
-```
